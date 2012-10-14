@@ -16,6 +16,17 @@
 
 package com.finapps;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 import android.os.Bundle;
@@ -38,10 +49,12 @@ public class MainActivity extends RoboActivity {
 
     @InjectView(R.id.editor)
     private EditText mEditor;
-    @InjectView(R.id.back)
+    @InjectView(R.id.test_back)
     private Button backButton;
-    @InjectView(R.id.clear)
+    @InjectView(R.id.test_clear)
     private Button clearButton;
+    @InjectView(R.id.download_button)
+    private Button mDownloadButton;
     
     
     public MainActivity() {
@@ -58,6 +71,7 @@ public class MainActivity extends RoboActivity {
         // Hook up button presses to the appropriate event handler.
         backButton.setOnClickListener(mBackListener);
         clearButton.setOnClickListener(mClearListener);
+        mDownloadButton.setOnClickListener(mDownloadListener);
         
         mEditor.setText(getText(R.string.main_label));
     }
@@ -126,13 +140,68 @@ public class MainActivity extends RoboActivity {
         }
 
     };
+    /** * A call-back for when the user presses the download button.
+     */
+    OnClickListener mDownloadListener= new OnClickListener() {
+        public void onClick(View v) {
+        	try {
+				String s = download();
+				mEditor.setText(s);
+				Transaction t = parseTransactions(s);
+			
+				
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+    };
 
-    /**
-     * A call-back for when the user presses the clear button.
+    /** * A call-back for when the user presses the clear button.
      */
     OnClickListener mClearListener = new OnClickListener() {
         public void onClick(View v) {
             mEditor.setText("");
         }
     };
+    
+    String download() throws IOException
+    {
+    	 URL u = new URL("http://echo.jsontest.com/amount/10/date/24234234534534/otherParty/pepe"); 
+    	 HttpURLConnection conn = (HttpURLConnection) u.openConnection(); 
+    	 StringBuilder response = new StringBuilder(); 
+    	 if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+    		 
+    		 //Get the Stream reader ready 
+    		 BufferedReader input = new BufferedReader(new InputStreamReader(conn.getInputStream()),8192); 
+    		 String line = null; 
+
+    		 while ((line = input.readLine()) != null) 
+    		 { 
+    			 response.append(line); 
+    		 } 
+
+    		 input.close(); 
+    	 }
+    	 return response.toString(); 
+    }
+    
+    Transaction parseTransactions(String json) throws JSONException {
+    	JSONObject obj = new JSONObject(json);
+    	
+    	Transaction result = new Transaction();
+    	result.amount = obj.getDouble("amount");
+    	result.date = obj.getLong("date");
+    	result.otherParty = obj.getString("otherParty");
+    	return result;
+    }
+    
+    class Transaction {
+    	double amount;
+    	String otherParty;
+    	long date;
+    }
 }

@@ -26,11 +26,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.finapps">
     
-    <uses-sdk android:targetSdkVersion="11"/>
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="16" />
     <!-- This package contains an application...  The 'label' is the name
          to display to the user for the overall application, and provides
          a default label for all following components.  The syntax here is a
          reference to one of our string resources.-->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application android:label="@string/skeleton_app">
 
         <!-- An Activity in the application - this is something the user

@@ -29,38 +29,54 @@
          horizontal space, and stretch to fill whatever vertical space
          is available to it.  Note the use of the "id" attribute, which
          allows us to find this object from the Java code. -->
-    <EditText android:id="@+id/editor"
-        android:layout_width="match_parent" android:layout_height="0dip"
+
+    <EditText
+        android:id="@+id/editor"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
         android:autoText="true"
         android:capitalize="sentences"
-        android:layout_weight="1"
-        android:freezesText="true" >
+        android:freezesText="true"
+        android:text="Hola" >
+
         <requestFocus />
     </EditText>
 
     <!-- Next view is another linear layout manager, now horizontal.  We
          give it a custom background; see colors.xml for the definition
          of drawable/semi_black-->
+
     <LinearLayout
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_gravity="center_vertical" android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:background="@drawable/semi_black">
+        android:orientation="horizontal">
 
         <!-- On the left: the "back" button.  See styles.xml for the
              definition of style/ActionButton, which we use to hold
              common attributes that are used for both this and the
              clear button.  See strings.xml for the definition of
              string/back. -->
-        <Button android:id="@+id/back" style="@style/ActionButton"
-            android:text="@string/back" />
 
         <!-- In the middle: a custom image, -->
 
         <!-- On the right: another button, this time with its text color
              changed to red.  Again, see colors.xml for the definition. -->
-        <Button android:id="@+id/clear" style="@style/ActionButton"
-            android:text="@string/clear" android:textColor="@color/red" />
+
+        <Button
+            android:id="@+id/test_clear"
+            style="@style/ActionButton"
+            android:text="@string/clear" />
+
+        <Button
+            android:id="@+id/test_back"
+            style="@style/ActionButton"
+            android:text="@string/back" />
+
+        <Button
+            android:id="@+id/download_button"
+            style="@style/ActionButton"
+            android:text="Download" />
 
     </LinearLayout>
 
