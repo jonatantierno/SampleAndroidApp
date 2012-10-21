@@ -87,6 +87,11 @@
             style="@style/ActionButton"
             android:text="Download" />
 
+        <Button
+            android:id="@+id/anim_button"
+            style="@style/ActionButton"
+            android:text="Anims" />
+
     </LinearLayout>
 
 </LinearLayout>

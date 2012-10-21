@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -63,6 +64,8 @@ public class MainActivity extends RoboActivity {
     private Button clearButton;
     @InjectView(R.id.download_button)
     private Button mDownloadButton;
+    @InjectView(R.id.anim_button)
+    private Button mAnimButton;
     
     private XYPlot mPlot;
     
@@ -82,6 +85,7 @@ public class MainActivity extends RoboActivity {
         backButton.setOnClickListener(mBackListener);
         clearButton.setOnClickListener(mClearListener);
         mDownloadButton.setOnClickListener(mDownloadListener);
+        mAnimButton.setOnClickListener(mAnimListener);
         
         mEditor.setText(getText(R.string.main_label));
         
@@ -213,6 +217,16 @@ public class MainActivity extends RoboActivity {
     OnClickListener mBackListener = new OnClickListener() {
         public void onClick(View v) {
             finish();
+        }
+
+    };
+    /**
+     * Goes to animation activity.
+     */
+    OnClickListener mAnimListener= new OnClickListener() {
+        public void onClick(View v) {
+        	startActivity(new Intent(MainActivity.this,GlassJarActivity.class));
+        	
         }
 
     };

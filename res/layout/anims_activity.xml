@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff" >
+
+    <RelativeLayout
+        android:id="@+id/cointile_layout"
+        android:layout_width="300px"
+        android:layout_height="300px"
+        android:layout_alignBottom="@+id/glassjar_imageview"
+        android:layout_alignLeft="@+id/glassjar_imageview"
+        android:layout_alignRight="@+id/glassjar_imageview"
+        android:layout_alignTop="@+id/glassjar_imageview"
+        android:background="@drawable/layer" >
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/glassjar_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/glassjar"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/percentage_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#000000" />
+    
+    </RelativeLayout>
+
+
+
