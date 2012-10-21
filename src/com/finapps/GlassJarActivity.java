@@ -17,7 +17,6 @@
 package com.finapps;
 
 import roboguice.activity.RoboActivity;
-import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -26,8 +25,10 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ScaleDrawable;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -38,7 +39,7 @@ import android.widget.TextView;
  * activity. Inside of its window, it places a single view: an EditText that
  * displays and edits some internal text.
  */
-public class GlassJarActivity extends RoboActivity {
+public class GlassJarActivity extends RoboActivity implements OnTouchListener {
     
     static final private int BACK_ID = Menu.FIRST;
     static final private int CLEAR_ID = Menu.FIRST + 1;
@@ -52,6 +53,7 @@ public class GlassJarActivity extends RoboActivity {
     @InjectView(R.id.glassjar_imageview)
     private ImageView mJarImageView;
     
+    
     double mPercentage = 0;
     public GlassJarActivity() {
     }
@@ -64,7 +66,9 @@ public class GlassJarActivity extends RoboActivity {
         // Inflate our UI from its XML layout description.
         setContentView(R.layout.anims_activity);
 
+        mLayout.setClickable(true);
         mLayout.setOnClickListener(mJarListener);
+        mLayout.setOnTouchListener(this);
     }
 
     /**
@@ -85,17 +89,21 @@ public class GlassJarActivity extends RoboActivity {
         public void onClick(View v) {
         	mPercentage +=PERCENTAGE_INCREMENT;
         	
-        	mPercentageTextView.setText(Double.toString(mPercentage));
+        	if(mPercentage >= 100)
+        	{
+        		mPercentage = 100;
+        	}
+        	
+        	mPercentageTextView.setText(Integer.toString((int)mPercentage)+"%");
         	
         	double coinPixels=MAX_JAR_PIXELS/100*mPercentage;
         	
         	final LayerDrawable layerDrawable = (LayerDrawable)mCoinTileLayout.getBackground();
         	final ScaleDrawable scaleDrawable = (ScaleDrawable)layerDrawable.findDrawableByLayerId(R.id.coin_drawable);
         	
-        	
 //        	scaleDrawable.setLevel((int)mPercentage*100);
  //       	scaleDrawable.invalidateSelf();
-        	ObjectAnimator anim = ObjectAnimator.ofInt(scaleDrawable, "Level", (int)mPercentage*100);
+        	ObjectAnimator anim = ObjectAnimator.ofInt(scaleDrawable, "Level", (int)(mPercentage*100));
         	anim.setInterpolator(new BounceInterpolator());
         	anim.addUpdateListener(new AnimatorUpdateListener() {
 				
@@ -110,6 +118,38 @@ public class GlassJarActivity extends RoboActivity {
 
     };
 
-    
+
+    private float initialY = 0;
+    private double initialPercentage= 0;
+    public boolean onTouch(View v, MotionEvent event) {
+    	
+    	switch (event.getAction() & MotionEvent.ACTION_MASK) {
+    	case MotionEvent.ACTION_DOWN: // Start gesture
+    		initialY = event.getY();
+    		initialPercentage = mPercentage;
+    		break;
+    	case MotionEvent.ACTION_MOVE:
+    		final LayerDrawable layerDrawable = (LayerDrawable)mCoinTileLayout.getBackground();
+    		final ScaleDrawable scaleDrawable = (ScaleDrawable)layerDrawable.findDrawableByLayerId(R.id.coin_drawable);
+    		mPercentage = initialPercentage+(initialY - event.getY())*100f/300f;
+    		
+    		if (mPercentage>100)
+    		{
+    			mPercentage =100;
+    		}
+    		if (mPercentage<0)
+    		{
+    			mPercentage = 0;
+    		}
+    		
+        	mPercentageTextView.setText(Integer.toString((int)mPercentage)+"%");
+        	
+    		scaleDrawable.setLevel((int)(mPercentage*100));
+    		scaleDrawable.invalidateSelf();
+    		return true;
+		}    	
+		
+    	return super.onTouchEvent(event);
+    };
     
 }
