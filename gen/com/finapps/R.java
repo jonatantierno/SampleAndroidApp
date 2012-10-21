@@ -14,10 +14,11 @@ public final class R {
         public static final int violet=0x7f020000;
     }
     public static final class id {
-        public static final int download_button=0x7f060003;
-        public static final int editor=0x7f060000;
-        public static final int test_back=0x7f060002;
-        public static final int test_clear=0x7f060001;
+        public static final int download_button=0x7f060004;
+        public static final int editor=0x7f060001;
+        public static final int mySimpleXYPlot=0x7f060000;
+        public static final int test_back=0x7f060003;
+        public static final int test_clear=0x7f060002;
     }
     public static final class layout {
         public static final int main_activity=0x7f030000;

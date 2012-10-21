@@ -30,11 +30,20 @@
          is available to it.  Note the use of the "id" attribute, which
          allows us to find this object from the Java code. -->
 
+    <com.androidplot.xy.XYPlot
+    android:id="@+id/mySimpleXYPlot"
+    android:layout_width="fill_parent"
+    android:layout_height="150dp"
+    android:layout_marginTop="0px"
+    android:layout_marginLeft="0px"
+    android:layout_marginRight="0px"
+    title="A Simple XYPlot Example"/>
+    
     <EditText
         android:id="@+id/editor"
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:layout_weight="1"
+        android:layout_weight="0.79"
         android:autoText="true"
         android:capitalize="sentences"
         android:freezesText="true"

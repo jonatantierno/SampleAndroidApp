@@ -21,14 +21,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +36,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.androidplot.series.XYSeries;
+import com.androidplot.xy.BarFormatter;
+import com.androidplot.xy.BoundaryMode;
+import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.LineAndPointRenderer;
+import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYStepMode;
 
 /**
  * This class provides a basic demonstration of how to write an Android
@@ -56,6 +64,7 @@ public class MainActivity extends RoboActivity {
     @InjectView(R.id.download_button)
     private Button mDownloadButton;
     
+    private XYPlot mPlot;
     
     public MainActivity() {
     }
@@ -68,12 +77,79 @@ public class MainActivity extends RoboActivity {
         // Inflate our UI from its XML layout description.
         setContentView(R.layout.main_activity);
 
+        mPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
         // Hook up button presses to the appropriate event handler.
         backButton.setOnClickListener(mBackListener);
         clearButton.setOnClickListener(mClearListener);
         mDownloadButton.setOnClickListener(mDownloadListener);
         
         mEditor.setText(getText(R.string.main_label));
+        
+        XYSeries series = new XYSeries() {
+			double[] values = new double[]{5,7,4,6,8,8,9,0,1,4,6,7};
+			public int size() {
+				return values.length;
+			}
+			
+			public String getTitle() {
+				return "Mi serie";
+			}
+			
+			public Number getX(int i) {
+				return i;
+			}
+			
+			public Number getY(int i) {
+				return values[i];
+			}
+			
+			public Number getMaxY() {
+				return 20;
+			}
+			
+			private Number getMaxX() {
+				return values.length;
+			}
+			
+			private Number getMinY() {
+				return 0;
+			}
+			
+			private Number getMinX() {
+				return -5;
+			}
+			
+			
+		};
+		Number max = mPlot.getCalculatedMaxY();
+		mEditor.setText("Max Y :"+max);
+        mPlot.addSeries(new SimpleXYSeries(), new LineAndPointFormatter(Color.rgb(0xFF, 0, 0),Color.rgb(0, 0xFF, 0),Color.rgb(0, 0, 0xFF)));
+        mPlot.addSeries(new SimpleXYSeries(), new BarFormatter(Color.rgb(0xFF, 0, 0),Color.rgb(0, 0xFF, 0)));
+        mPlot.addSeries(series, new LineAndPointFormatter(Color.rgb(0x66, 0, 0),Color.rgb(0, 0x66, 0),Color.rgb(0, 0, 0x66)));
+     
+        mPlot.setDomainStepMode(XYStepMode.SUBDIVIDE);
+        mPlot.setDomainStepValue(20);
+ 
+        // thin out domain/range tick labels so they dont overlap each other:
+        mPlot.setTicksPerDomainLabel(5);
+        mPlot.setTicksPerRangeLabel(3);
+        mPlot.disableAllMarkup();
+ 
+        // freeze the range boundaries:
+        mPlot.setRangeBoundaries(-10, 100, BoundaryMode.FIXED);
+        
+        new Thread(){
+        	public void run(){
+                try {
+        			mPlot.postRedraw();
+        		} catch (InterruptedException e) {
+        			// TODO Auto-generated catch block
+        			e.printStackTrace();
+        		}
+        		
+        	}
+        }.start();
+
     }
 
     /**
@@ -146,9 +222,9 @@ public class MainActivity extends RoboActivity {
         public void onClick(View v) {
         	try {
 				String s = download();
-				mEditor.setText(s);
 				Transaction t = parseTransactions(s);
-			
+				
+				mEditor.setText(t.amount+" euros from: "+t.otherParty+". JSON:" + s);
 				
 				
 			} catch (IOException e) {
@@ -203,5 +279,62 @@ public class MainActivity extends RoboActivity {
     	double amount;
     	String otherParty;
     	long date;
+    }
+    
+    
+    class SimpleXYSeries implements XYSeries {
+        private final int[] vals = {0, 25, 55, 2, 80, 30, 99, 0, 44, 6};
+     
+        // f(x) = x
+        public Number getX(int index) {
+            return index;
+        }
+     
+     
+        // range begins at 0
+        public Number getMinX() {
+            return 0;
+        }
+     
+        // range ends at 9
+        public Number getMaxX() {
+            return 9;
+        }
+     
+        public String getTitle() {
+            return "Some Numbers";
+        }
+     
+        // range consists of all the values in vals
+        public int size() {
+            return vals.length;
+        }
+     
+        public void onReadBegin() {
+     
+        }
+     
+        public void onReadEnd() {
+     
+        }
+     
+        // return vals[index]
+        public Number getY(int index) {
+            // make sure index isnt something unexpected:
+            if(index < 0 || index > 9) {
+                throw new IllegalArgumentException("Only values between 0 and 9 are allowed.");
+            }
+            return vals[index];
+        }
+     
+        // smallest value in vals is 0
+        public Number getMinY() {
+            return 0;
+        }
+     
+        // largest value in vals is 99
+        public Number getMaxY() {
+            return 99;
+        }
     }
 }
