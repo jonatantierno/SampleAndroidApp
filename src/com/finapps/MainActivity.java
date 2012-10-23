@@ -255,6 +255,7 @@ public class MainActivity extends RoboActivity {
     OnClickListener mClearListener = new OnClickListener() {
         public void onClick(View v) {
             mEditor.setText("");
+            MainActivity.this.sendBroadcast(new Intent(PiggieWidget.SAVE_ACTION));
         }
     };
     

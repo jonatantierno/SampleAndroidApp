@@ -11,11 +11,18 @@ import android.os.IBinder;
 import android.widget.RemoteViews;
 
 public class PiggieWidget extends AppWidgetProvider {
+	public static final String SAVE_ACTION = "com.finapps.SAVE";
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
         int[] appWidgetIds) {
         // To prevent any ANR timeouts, we perform the update in a service
         context.startService(new Intent(context, UpdateService.class));
+    }
+    
+    @Override
+    public void onReceive(Context context, Intent intent) {
+    	// TODO Auto-generated method stub
+    	super.onReceive(context, intent);
     }
     
     public static class UpdateService extends Service {
@@ -46,8 +53,10 @@ public class PiggieWidget extends AppWidgetProvider {
                      0 /* no requestCode */, intent, 0 /* no flags */);
              views.setOnClickPendingIntent(R.id.toapp_button, pendingIntent);
              
-             
- 
+        	Intent saveIntent = new Intent(SAVE_ACTION);
+        	 PendingIntent savePendingIntent = PendingIntent.getActivity(context,
+                     0 /* no requestCode */, saveIntent, 0 /* no flags */);
+             views.setOnClickPendingIntent(R.id.save_button, savePendingIntent);
         	return views;
         }
     }

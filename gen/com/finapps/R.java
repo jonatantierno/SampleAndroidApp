@@ -20,10 +20,11 @@ public final class R {
     }
     public static final class id {
         public static final int anim_button=0x7f070009;
-        public static final int coin_drawable=0x7f07000c;
+        public static final int coin_drawable=0x7f07000d;
         public static final int cointile_layout=0x7f070001;
         public static final int download_button=0x7f070008;
         public static final int editor=0x7f070005;
+        public static final int glassJar1=0x7f07000c;
         public static final int glassjar_imageview=0x7f070002;
         public static final int layout=0x7f070000;
         public static final int mySimpleXYPlot=0x7f070004;
@@ -37,6 +38,7 @@ public final class R {
         public static final int anims_activity=0x7f030000;
         public static final int main_activity=0x7f030001;
         public static final int piggie_layout=0x7f030002;
+        public static final int piggie_widget_container=0x7f030003;
     }
     public static final class string {
         public static final int back=0x7f050001;
