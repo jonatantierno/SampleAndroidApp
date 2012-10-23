@@ -225,7 +225,7 @@ public class MainActivity extends RoboActivity {
      */
     OnClickListener mAnimListener= new OnClickListener() {
         public void onClick(View v) {
-        	startActivity(new Intent(MainActivity.this,GlassJarActivity.class));
+        	startActivity(new Intent("com.finapps.OPEN_JAR"));
         	
         }
 
