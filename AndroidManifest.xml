@@ -72,8 +72,6 @@
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/piggie_widget" />
         </receiver>
         
-        <!-- Service to perform web API queries -->
-		<service android:name="com.finapps.PiggieWidget$UpdateService" />
     </application>
 
 </manifest>

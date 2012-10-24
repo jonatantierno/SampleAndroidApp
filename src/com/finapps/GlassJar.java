@@ -118,4 +118,8 @@ public class GlassJar extends RelativeLayout implements OnTouchListener, OnClick
     	anim.setDuration(1000);
     	anim.start();	
     }
+
+	public double getPercentage() {
+		return mPercentage;
+	}
 }

@@ -18,21 +18,12 @@ package com.finapps;
 
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.animation.ValueAnimator.AnimatorUpdateListener;
-import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ScaleDrawable;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.view.animation.BounceInterpolator;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.Button;
+
 
 /**
  * This class provides a basic demonstration of how to write an Android
@@ -43,6 +34,11 @@ public class GlassJarActivity extends RoboActivity {
     
     static final private int BACK_ID = Menu.FIRST;
     static final private int CLEAR_ID = Menu.FIRST + 1;
+
+@InjectView(R.id.save_button)
+private Button saveButton;
+@InjectView(R.id.glassJar1)
+private GlassJar glassJar;
 
     public GlassJarActivity() {
     }
@@ -55,6 +51,16 @@ public class GlassJarActivity extends RoboActivity {
         // Inflate our UI from its XML layout description.
         setContentView(R.layout.piggie_widget_container);
 
+        saveButton.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				final Intent saveIntent = new Intent(GlassJarActivity.this, PiggieWidget.class);
+	        	saveIntent.setAction(PiggieWidget.SAVE_ACTION);
+	        	saveIntent.putExtra(PiggieWidget.EXTRA_PERCENTAGE, glassJar.getPercentage());
+	        	
+	        	sendBroadcast(saveIntent);
+			}
+		});
     }
 
     /**

@@ -9,55 +9,53 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 public class PiggieWidget extends AppWidgetProvider {
 	public static final String SAVE_ACTION = "com.finapps.SAVE";
+	public static final String EXTRA_PERCENTAGE= "PERCENTAGE";
+	
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
         int[] appWidgetIds) {
-        // To prevent any ANR timeouts, we perform the update in a service
-        context.startService(new Intent(context, UpdateService.class));
+    	Toast.makeText(context, "onUpdate", Toast.LENGTH_SHORT).show();
+    	
+        for (int i = 0; i<appWidgetIds.length; i++)
+        {
+        	final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.piggie_layout);
+        	
+        	final Intent intent = new Intent("com.finapps.OPEN_JAR");
+        	 final PendingIntent pendingIntent = PendingIntent.getActivity(context,
+                     0 /* no requestCode */, intent, 0 /* no flags */);
+             views.setOnClickPendingIntent(R.id.toapp_button, pendingIntent);
+             
+        	final Intent saveIntent = new Intent(context, PiggieWidget.class);
+        	saveIntent.setAction(SAVE_ACTION);
+        	 final PendingIntent savePendingIntent = PendingIntent.getBroadcast(context,
+                     0 /* no requestCode */, saveIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+             views.setOnClickPendingIntent(R.id.save_button, savePendingIntent);
+             
+             appWidgetManager.updateAppWidget(appWidgetIds[i], views);
+        }
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
     
     @Override
     public void onReceive(Context context, Intent intent) {
     	// TODO Auto-generated method stub
-    	super.onReceive(context, intent);
-    }
-    
-    public static class UpdateService extends Service {
-
-		@Override
-		public IBinder onBind(Intent arg0) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
-		
-        @Override
-        public void onStart(Intent intent, int startId) {
-            // Build the widget update for today
-            RemoteViews updateViews = buildUpdate(this);
-
-            // Push update for this widget to the home screen
-            ComponentName thisWidget = new ComponentName(this, PiggieWidget.class);
-            AppWidgetManager manager = AppWidgetManager.getInstance(this);
-            manager.updateAppWidget(thisWidget, updateViews);
-        }
-        
-        private RemoteViews buildUpdate(Context context){
-        	RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.piggie_layout);
-        	
-        	Intent intent = new Intent("com.finapps.OPEN_JAR");
-        	 PendingIntent pendingIntent = PendingIntent.getActivity(context,
-                     0 /* no requestCode */, intent, 0 /* no flags */);
-             views.setOnClickPendingIntent(R.id.toapp_button, pendingIntent);
+    	Toast.makeText(context, "onReceive", Toast.LENGTH_SHORT).show();
+    	
+    	if (intent.getAction().equals(SAVE_ACTION)){
+    		double percentage = intent.getDoubleExtra(EXTRA_PERCENTAGE, 0);
+    		RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.piggie_layout);
+        	views.setTextViewText(R.id.percentage_textview, percentage+"%");
              
-        	Intent saveIntent = new Intent(SAVE_ACTION);
-        	 PendingIntent savePendingIntent = PendingIntent.getActivity(context,
-                     0 /* no requestCode */, saveIntent, 0 /* no flags */);
-             views.setOnClickPendingIntent(R.id.save_button, savePendingIntent);
-        	return views;
-        }
+        	  final AppWidgetManager mgr = AppWidgetManager.getInstance(context);
+              final ComponentName cn = new ComponentName(context, PiggieWidget.class);
+              
+              mgr.updateAppWidget(cn, views);
+         }
+    	
+    	super.onReceive(context, intent);
     }
 }
