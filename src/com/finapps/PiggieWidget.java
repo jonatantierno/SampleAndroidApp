@@ -53,6 +53,7 @@ public class PiggieWidget extends AppWidgetProvider {
         	  final AppWidgetManager mgr = AppWidgetManager.getInstance(context);
               final ComponentName cn = new ComponentName(context, PiggieWidget.class);
               
+              
               mgr.updateAppWidget(cn, views);
          }
     	

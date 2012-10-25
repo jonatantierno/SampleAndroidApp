@@ -7,9 +7,29 @@
 
     <com.finapps.GlassJar
         android:id="@+id/glassJar1"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true" >
+
     </com.finapps.GlassJar>
+
+    <ImageView
+        android:id="@+id/coin_imageview"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/descarga" />
+
+    <ImageView
+        android:id="@+id/treasure_imageview"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignBottom="@+id/glassJar1"
+        android:layout_alignLeft="@+id/coin_imageview"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/coin_background" />
     
     </RelativeLayout>
 

@@ -18,11 +18,19 @@ package com.finapps;
 
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
+import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.DragEvent;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnDragListener;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 
 /**
@@ -30,7 +38,7 @@ import android.widget.Button;
  * activity. Inside of its window, it places a single view: an EditText that
  * displays and edits some internal text.
  */
-public class GlassJarActivity extends RoboActivity {
+public class GlassJarActivity extends RoboActivity implements OnTouchListener, OnDragListener{
     
     static final private int BACK_ID = Menu.FIRST;
     static final private int CLEAR_ID = Menu.FIRST + 1;
@@ -39,6 +47,12 @@ public class GlassJarActivity extends RoboActivity {
 private Button saveButton;
 @InjectView(R.id.glassJar1)
 private GlassJar glassJar;
+@InjectView(R.id.treasure_imageview)
+private ImageView treasureImageView;
+@InjectView(R.id.coin_imageview)
+private ImageView coinImageView;
+@InjectView(R.id.layout)
+private RelativeLayout layout;
 
     public GlassJarActivity() {
     }
@@ -61,6 +75,9 @@ private GlassJar glassJar;
 	        	sendBroadcast(saveIntent);
 			}
 		});
+        coinImageView.setOnTouchListener(this);
+        glassJar.setOnDragListener(this);
+        treasureImageView.setOnDragListener(this);
     }
 
     /**
@@ -73,6 +90,46 @@ private GlassJar glassJar;
 
     public static final double PERCENTAGE_INCREMENT = 5;
     public static final int MAX_JAR_PIXELS = 282;
+
+	public boolean onTouch(View v, MotionEvent event) {
+		if (v != coinImageView)
+		{
+			Log.d("Touch","not coin");
+		}
+		switch (event.getAction() & MotionEvent.ACTION_MASK) {
+    	case MotionEvent.ACTION_DOWN: // Start gesture
+    		ImageView shadowImage = new ImageView(this);
+    		shadowImage.setImageResource(R.drawable.descarga);
+    		shadowImage.setTag("tag");
+
+    		v.startDrag(ClipData.newPlainText("tag", "tag"), new View.DragShadowBuilder(coinImageView), null, 0);
+    		break;
+		}    	
+		
+    	return super.onTouchEvent(event);
+	}
+
+	public boolean onDrag(View v, DragEvent event) {
+		// TODO Auto-generated method stub
+		switch(event.getAction())
+		{
+		case DragEvent.ACTION_DRAG_STARTED:
+			coinImageView.setAlpha(0.5f);
+			glassJar.setAlpha(0.5f);
+			return true;
+		case DragEvent.ACTION_DRAG_ENDED:
+			coinImageView.setAlpha(1f);
+			glassJar.setAlpha(1f);
+			break;
+		case DragEvent.ACTION_DRAG_ENTERED:
+			Log.d("Entered","entered");
+			break;
+		case DragEvent.ACTION_DROP:
+			glassJar.incPercentage();
+			break;
+		}
+		return false;
+	}
 
    
 }
